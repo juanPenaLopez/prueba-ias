@@ -1,0 +1,43 @@
+<section class="card">
+  <h2>Crear transferencia</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label>
+      Client ID
+      <input type="text" formControlName="clientId" placeholder="UUID del cliente" />
+    </label>
+
+    <label>
+      Cuenta origen
+      <input type="text" formControlName="sourceAccountId" placeholder="ACC-001" />
+    </label>
+
+    <label>
+      Cuenta destino
+      <input type="text" formControlName="targetAccountId" placeholder="ACC-002" />
+    </label>
+
+    <label>
+      Monto
+      <input type="number" formControlName="amount" step="0.01" min="0.01" />
+    </label>
+
+    <label>
+      Moneda
+      <input type="text" formControlName="currency" maxlength="3" />
+    </label>
+
+    <label>
+      Descripcion
+      <input type="text" formControlName="description" placeholder="Pago proveedor" />
+    </label>
+
+    <button type="submit" [disabled]="loading">
+      {{ loading ? 'Creando...' : 'Crear transferencia' }}
+    </button>
+  </form>
+
+  @if (errorMessage) {
+    <p class="error">{{ errorMessage }}</p>
+  }
+</section>

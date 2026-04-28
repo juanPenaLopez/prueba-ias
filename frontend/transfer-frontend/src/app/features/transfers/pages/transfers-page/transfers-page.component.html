@@ -1,0 +1,29 @@
+<main class="container">
+  <header>
+    <h1>Gestion de transferencias</h1>
+    <p>Frontend Angular integrado con API de transferencias.</p>
+  </header>
+
+  @if (actionMessage()) {
+    <p class="success">{{ actionMessage() }}</p>
+  }
+
+  <section class="grid">
+    <app-transfer-filters (filtersChanged)="onFiltersChanged($event)" />
+
+    <app-create-transfer-form
+      [clientId]="filters().clientId"
+      (transferCreated)="onTransferCreated()"
+    />
+  </section>
+
+  <app-transfer-list
+    [transfers]="transfers()"
+    [loading]="loading()"
+    [errorMessage]="errorMessage()"
+    [page]="filters().page"
+    [size]="filters().size"
+    (pageChanged)="onPageChanged($event)"
+    (statusUpdated)="onStatusUpdated($event)"
+  />
+</main>

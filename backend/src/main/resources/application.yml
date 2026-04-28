@@ -1,0 +1,27 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: transfer-service
+
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/transfers
+    username: postgres
+    password: postgres
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: transfer-group
+      auto-offset-reset: earliest
+
+api:
+  security:
+    enabled: true
+    api-key: ${API_KEY:my-secret-api-key-123}
+
+logging:
+  level:
+    root: INFO
+    com.ias.transfer: DEBUG

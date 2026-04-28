@@ -1,0 +1,51 @@
+<section class="card">
+  <div class="header">
+    <h2>Transferencias</h2>
+    <span>Pagina {{ page + 1 }}</span>
+  </div>
+
+  @if (loading) {
+    <p>Cargando transferencias...</p>
+  } @else if (errorMessage) {
+    <p class="error">{{ errorMessage }}</p>
+  } @else if (!transfers.length) {
+    <p>No hay datos para los filtros actuales.</p>
+  } @else {
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Monto</th>
+          <th>Moneda</th>
+          <th>Estado</th>
+          <th>Actualizar estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (transfer of transfers; track transfer.transferId) {
+          <tr>
+            <td>{{ transfer.transferId }}</td>
+            <td>{{ transfer.amount }}</td>
+            <td>{{ transfer.currency }}</td>
+            <td>{{ transfer.status }}</td>
+            <td>
+              <select
+                [value]="transfer.status"
+                (change)="updateStatus(transfer.transferId, $any($event.target).value)"
+              >
+                @for (status of statuses; track status) {
+                  <option [value]="status">{{ status }}</option>
+                }
+              </select>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      <button type="button" (click)="prevPage()" [disabled]="page === 0">Anterior</button>
+      <button type="button" (click)="nextPage()" [disabled]="transfers.length < size">Siguiente</button>
+    </div>
+  }
+</section>
