@@ -1,59 +1,83 @@
-# TransferFrontend
+# Frontend - Transfer UI (Angular)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.7.
+Aplicacion web Angular para consumir la API de transferencias del backend.
 
-## Development server
+## Arquitectura utilizada
 
-To start a local development server, run:
+Frontend en Angular 21 con componentes standalone y separacion por responsabilidad:
 
-```bash
-ng serve
-```
+- `core/`
+  - `models`: contratos tipados de API
+  - `services`: consumo HTTP
+  - `interceptors`: inyeccion de `X-API-Key`
+- `features/transfers/`
+  - `components`: formulario, filtros, tabla/paginacion
+  - `pages`: orquestacion de estado de la pantalla
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Se usa:
+- formularios reactivos
+- manejo de estados `loading/error`
+- servicios para capa API
 
-## Code scaffolding
+## Decisiones tecnicas
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- **Standalone components**: menor friccion y estructura simple para prueba tecnica.
+- **`TransferApiService` centralizado**: evita duplicar llamadas HTTP en componentes.
+- **Interceptor para API key**: mantiene seguridad transversal.
+- **Estado de pagina en `TransfersPageComponent`**: facilita mantenimiento del flujo.
+- **Tipos estrictos (`Transfer`, `ApiResponse`)**: menos errores de contrato backend/frontend.
 
-```bash
-ng generate component component-name
-```
+## Instrucciones de ejecucion
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Requisitos
+- Node compatible con Angular 21 (`>=20.19` o `>=22.12`)
+- npm
+- backend ejecutandose en `http://localhost:8080`
 
-```bash
-ng generate --help
-```
+### Configuracion
 
-## Building
+Revisar archivo:
 
-To build the project run:
+- `src/environments/environment.ts`
 
-```bash
-ng build
-```
+Valores por defecto:
+- `apiBaseUrl: http://localhost:8080/api/v1`
+- `apiKey: my-secret-api-key-123`
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+### Levantar en desarrollo
 
 ```bash
-ng e2e
+npm install
+npm start
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+App disponible en:
+- `http://localhost:4200`
 
-## Additional Resources
+### Build
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```bash
+npm run build
+```
+
+### Pruebas
+
+```bash
+npm run test -- --watch=false
+```
+
+## Ejemplos de uso
+
+### 1) Listar transferencias
+1. Ingresar `clientId` en "Filtros de busqueda".
+2. Elegir estado (opcional), por ejemplo `PENDING`.
+3. Click en `Aplicar filtros`.
+
+### 2) Crear transferencia
+1. Completar `clientId`.
+2. Completar cuentas, monto y moneda.
+3. Click en `Crear transferencia`.
+
+### 3) Actualizar estado
+1. En la tabla de resultados, cambiar estado en el `select`.
+2. El frontend ejecuta `PATCH /transfers/{id}/status` y recarga listado.
